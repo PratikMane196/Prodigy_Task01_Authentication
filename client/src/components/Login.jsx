@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";
 
 export default function Login() {
@@ -15,7 +15,6 @@ export default function Login() {
 
         try {
             const data = await loginUser(formData);
-            
             if (data.success && data.token) {
                 localStorage.setItem("token", data.token);
                 navigate("/dashboard");
@@ -23,42 +22,37 @@ export default function Login() {
                 setError(data.message || "Invalid email or password.");
             }
         } catch (err) {
-            console.error("Login error:", err);
-            setError("Unable to connect to the server. Is the backend running?");
+            setError("Unable to connect to the server.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="relative flex min-h-[calc(100vh-73px)] items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 px-4 py-12 overflow-hidden">
-            {/* Decorative background glow circles for extra visual depth */}
-            <div className="absolute -top-40 -left-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-
-            <div className="relative w-full max-w-md rounded-2xl bg-white/95 backdrop-blur-xl p-8 shadow-2xl ring-1 ring-white/20">
+        <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-900 px-4 py-12">
+            <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
                 <div className="text-center">
-                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-violet-600 to-pink-600 text-white shadow-lg">
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-violet-600 to-pink-600 text-white shadow-md">
                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                     </div>
-                    <h2 className="text-3xl font-extrabold tracking-tight text-gray-900">Welcome Back</h2>
-                    <p className="mt-2 text-sm text-gray-500">Sign in to access your secure dashboard</p>
+                    <h2 className="text-2xl font-extrabold text-zinc-900">Welcome Back</h2>
+                    <p className="mt-1 text-xs text-zinc-500">Sign in to access your secure dashboard</p>
                 </div>
 
                 {error && (
-                    <div className="mt-6 rounded-xl bg-red-50 p-4 border border-red-200 text-sm font-medium text-red-600 shadow-sm animate-bounce">
+                    <div className="mt-4 rounded-xl bg-red-50 p-3 text-xs font-medium text-red-600 border border-red-200">
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700">Email Address</label>
+                        <label className="block text-xs font-medium text-zinc-700">Email Address</label>
                         <input 
                             type="email" 
-                            className="mt-2 block w-full rounded-xl border border-gray-300 bg-gray-50/50 px-4 py-3 text-gray-900 shadow-inner focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all"
+                            className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:border-indigo-600 focus:bg-white focus:outline-none transition-all"
                             placeholder="you@example.com"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -67,10 +61,10 @@ export default function Login() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700">Password</label>
+                        <label className="block text-xs font-medium text-zinc-700">Password</label>
                         <input 
                             type="password" 
-                            className="mt-2 block w-full rounded-xl border border-gray-300 bg-gray-50/50 px-4 py-3 text-gray-900 shadow-inner focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all"
+                            className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:border-indigo-600 focus:bg-white focus:outline-none transition-all"
                             placeholder="••••••••"
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -81,15 +75,15 @@ export default function Login() {
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className="w-full rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-pink-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:from-violet-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 transition-all transform active:scale-[0.98]"
+                        className="w-full rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-pink-600 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all disabled:opacity-50"
                     >
                         {loading ? "Signing in..." : "Sign In"}
                     </button>
                 </form>
 
-                <p className="mt-8 text-center text-sm text-gray-600">
+                <p className="mt-6 text-center text-xs text-zinc-500">
                     Don't have an account?{" "}
-                    <Link to="/register" className="font-bold text-indigo-600 hover:text-pink-600 transition-colors underline decoration-2 underline-offset-4">
+                    <Link to="/register" className="font-semibold text-indigo-600 hover:underline">
                         Create account
                     </Link>
                 </p>

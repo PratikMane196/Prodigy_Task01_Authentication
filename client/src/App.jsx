@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
@@ -6,56 +6,62 @@ import Dashboard from "./components/Dashboard";
 function Navbar() {
     const token = localStorage.getItem("token");
 
-    return (
-        <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-white/10 bg-slate-900/80 px-6 py-4 backdrop-blur-md">
-            <Link to="/" className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-500 to-pink-500 font-bold text-white shadow-md">
-                    M
-                </div>
-                <span className="text-lg font-bold tracking-tight text-white">
-                    MERN<span className="text-indigo-400">Auth</span>
-                </span>
-            </Link>
+    const handleSignOut = () => {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+    };
 
-            <div className="flex items-center gap-3">
-                {token ? (
-                    <button 
-                        onClick={() => {
-                            localStorage.removeItem("token");
-                            window.location.href = "/login";
-                        }}
-                        className="rounded-lg bg-slate-800 border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-700 hover:text-white"
-                    >
-                        Sign Out
-                    </button>
-                ) : (
-                    <>
-                        <Link 
-                            to="/login" 
-                            className="rounded-lg px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+    return (
+        <header className="border-b border-zinc-200/80 bg-[#FAFAFA]">
+            <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+                {/* Brand Logo */}
+                <Link to={token ? "/dashboard" : "/login"} className="flex items-center gap-2.5">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 text-xs font-bold text-white">
+                        P
+                    </div>
+                    <span className="text-sm font-semibold tracking-tight text-zinc-900">
+                        ProdigyAuth
+                    </span>
+                </Link>
+
+                {/* Right Action */}
+                <div className="flex items-center gap-3">
+                    {token ? (
+                        <button
+                            onClick={handleSignOut}
+                            className="rounded-lg border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-700 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-900"
                         >
-                            Sign In
-                        </Link>
-                        <Link 
-                            to="/register" 
-                            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
-                        >
-                            Get Started
-                        </Link>
-                    </>
-                )}
+                            Sign out
+                        </button>
+                    ) : (
+                        <>
+                            <Link
+                                to="/login"
+                                className="rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:text-zinc-900"
+                            >
+                                Sign in
+                            </Link>
+                            <Link
+                                to="/register"
+                                className="rounded-lg bg-zinc-900 px-3.5 py-1.5 text-xs font-medium text-white shadow-xs transition hover:bg-zinc-800"
+                            >
+                                Create account
+                            </Link>
+                        </>
+                    )}
+                </div>
             </div>
-        </nav>
+        </header>
     );
 }
 
 export default function App() {
     return (
         <Router>
-            <div className="min-h-screen bg-slate-950 font-sans text-slate-100">
+            <div className="min-h-screen bg-[#FAFAFA] font-sans text-zinc-900 antialiased">
                 <Navbar />
                 <Routes>
-                    <Route path="/" element={<Login />} />
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/dashboard" element={<Dashboard />} />
