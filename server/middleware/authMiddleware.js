@@ -1,25 +1,21 @@
 import jwt from "jsonwebtoken";
 
-export const protect = (req, res, next) => {
-    let token;
+const authMiddleware = (req, res, next) => {
+    const authHeader = req.headers.authorization;
 
-    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-        try {
-            // Get token from header (Format: "Bearer <token>")
-            token = req.headers.authorization.split(" ")[1];
-
-            // Verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback_secret_key");
-
-            // Attach user info to request object
-            req.user = decoded;
-            next();
-        } catch (error) {
-            return res.status(401).json({ success: false, message: "Not authorized, token failed." });
-        }
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ success: false, message: "Access denied. No token provided." });
     }
 
-    if (!token) {
-        return res.status(401).json({ success: false, message: "Not authorized, no token provided." });
+    const token = authHeader.split(" ")[1];
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({ success: false, message: "Invalid or expired token." });
     }
 };
+
+export default authMiddleware;
